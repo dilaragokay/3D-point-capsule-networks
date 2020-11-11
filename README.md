@@ -1,4 +1,4 @@
-Perturbation experiments are in `Perturbation-3DCapsNet.ipynb`. Below is the README.md of the original repo.
+Perturbation experiments are in `Perturbation-3DCapsNet.ipynb`. This work has been built upon [the original implementation](https://github.com/yongheng1991/3D-point-capsule-networks/). Below is the README.md of the original repo.
 
 ## 3D Point Capsule Networks
 Created by <a href="http://campar.in.tum.de/Main/YongHengZhao" target="_blank">Yongheng Zhao</a>, <a href="http://campar.in.tum.de/Main/TolgaBirdal" target="_blank">Tolga Birdal</a>, <a href="http://campar.in.tum.de/Main/HaowenDeng" target="_blank">Haowen Deng</a>, <a href="http://campar.in.tum.de/Main/FedericoTombari" target="_blank">Federico Tombari </a> from TUM.
