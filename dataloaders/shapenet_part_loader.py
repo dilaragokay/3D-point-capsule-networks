@@ -28,7 +28,6 @@ class PartDataset(data.Dataset):
         # print(self.cat)
         if not class_choice is None:
             self.cat = {k: v for k, v in self.cat.items() if k in class_choice}
-            print(self.cat)
         self.meta = {}
         with open(os.path.join(self.root, 'train_test_split', 'shuffled_train_file_list.json'), 'r') as f:
             train_ids = set([str(d.split('/')[2]) for d in json.load(f)])
@@ -65,7 +64,6 @@ class PartDataset(data.Dataset):
                 self.datapath.append((item, fn[0], fn[1], fn[2], fn[3]))
 
         self.classes = dict(zip(sorted(self.cat), range(len(self.cat))))
-        print(self.classes)
         self.num_seg_classes = 0
         if not self.classification:
             for i in range(len(self.datapath)//50):
