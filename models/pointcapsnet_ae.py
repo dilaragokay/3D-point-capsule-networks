@@ -121,13 +121,14 @@ class CapsDecoder(nn.Module):
         self.nb_primitives=int(num_points/latent_caps_size)
         self.decoder = nn.ModuleList(
             [PointGenCon(bottleneck_size=self.bottleneck_size+2) for i in range(0, self.nb_primitives)])
-    def forward(self, x):
+    def forward(self, x, highlight, feature, perturb, rand_grid):
         outs = []
         for i in range(0, self.nb_primitives):
-            rand_grid = Variable(torch.cuda.FloatTensor(x.size(0), 2, self.latent_caps_size))
-            rand_grid.data.uniform_(0, 1)
             y = torch.cat((rand_grid, x.transpose(2, 1)), 1).contiguous()
-            outs.append(self.decoder[i](y))
+            for j in range(x.shape[0]):
+              y[j][feature+2][highlight] += perturb
+            out = self.decoder[i](y)
+            outs.append(out)
         return torch.cat(outs, 2).contiguous()
 
     
@@ -138,13 +139,14 @@ class PointCapsNet(nn.Module):
         self.primary_point_caps_layer = PrimaryPointCapsLayer(prim_vec_size, num_points)
         self.latent_caps_layer = LatentCapsLayer(latent_caps_size, prim_caps_size, prim_vec_size, latent_vec_size)
         self.caps_decoder = CapsDecoder(latent_caps_size,latent_vec_size, num_points)
+        
 
-    def forward(self, data):
+    def forward(self, data, highlight, feature, perturb, rand_grid):
         x1 = self.conv_layer(data)
         x2 = self.primary_point_caps_layer(x1)
         latent_capsules = self.latent_caps_layer(x2)
-        reconstructions = self.caps_decoder(latent_capsules)
-        return latent_capsules, reconstructions
+        reconstructions = self.caps_decoder(latent_capsules, highlight, feature, perturb, rand_grid)
+        return reconstructions
 
     def loss(self, data, reconstructions):
          return self.reconstruction_loss(data, reconstructions)
